@@ -20,7 +20,10 @@ export default class App extends React.Component {
         this.state = {
             tripFrom: null,
             tripTo: {},
-            tripStop: {}
+            tripStop: {},
+            address:'',
+            coordinates:'',
+            markers:[],
         };
     }
 
@@ -34,11 +37,16 @@ export default class App extends React.Component {
                         minLength={2} // minimum length of text to search
                         autoFocus={false}
                         returnKeyType={'search'} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
-                        listViewDisplayed='auto'    // true/false/undefined
+                        listViewDisplayed={false}    // true/false/undefined
                         fetchDetails={true}
                         renderDescription={row => row.description} // custom description render
                         onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
                             console.log(details.geometry.location);
+                            this.setState(
+                                {
+                                    tripFrom: details.geometry.location
+                                }
+                            );
                             //this.setState({tripFrom: details.geometry.location});
                         }}
 
@@ -82,115 +90,115 @@ export default class App extends React.Component {
                         // renderRightButton={() => <Text>Custom text after the input</Text>}
                     />
                 </View>
-                <View style={{flexDirection: 'row'}}>
-                    <GooglePlacesAutocomplete
-                        placeholder='Chọn điểm đến'
-                        minLength={2} // minimum length of text to search
-                        autoFocus={false}
-                        returnKeyType={'search'} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
-                        listViewDisplayed='auto'    // true/false/undefined
-                        fetchDetails={true}
-                        renderDescription={row => row.description} // custom description render
-                        onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
-                            //this.setState({tripTo: details.geometry.location})
-                        }}
+                {/*<View style={{flexDirection: 'row'}}>*/}
+                    {/*<GooglePlacesAutocomplete*/}
+                        {/*placeholder='Chọn điểm đến'*/}
+                        {/*minLength={2} // minimum length of text to search*/}
+                        {/*autoFocus={false}*/}
+                        {/*returnKeyType={'search'} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype*/}
+                        {/*listViewDisplayed='auto'    // true/false/undefined*/}
+                        {/*fetchDetails={true}*/}
+                        {/*renderDescription={row => row.description} // custom description render*/}
+                        {/*onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true*/}
+                            {/*//this.setState({tripTo: details.geometry.location})*/}
+                        {/*}}*/}
 
-                        getDefaultValue={() => ''}
+                        {/*getDefaultValue={() => ''}*/}
 
-                        query={{
-                            // available options: https://developers.google.com/places/web-service/autocomplete
-                            key: 'AIzaSyADMVfXyrF1LhxMVnu6AlAa0hPo3tQiyZ4',
-                            language: 'vi', // language of the results
-                            //types: '(cities)' // default: 'geocode'
-                        }}
+                        {/*query={{*/}
+                            {/*// available options: https://developers.google.com/places/web-service/autocomplete*/}
+                            {/*key: 'AIzaSyADMVfXyrF1LhxMVnu6AlAa0hPo3tQiyZ4',*/}
+                            {/*language: 'vi', // language of the results*/}
+                            {/*//types: '(cities)' // default: 'geocode'*/}
+                        {/*}}*/}
 
-                        styles={{
-                            textInputContainer: {
-                                width: '100%'
-                            },
-                            description: {
-                                fontWeight: 'bold'
-                            },
-                            predefinedPlacesDescription: {
-                                color: '#1faadb'
-                            }
-                        }}
+                        {/*styles={{*/}
+                            {/*textInputContainer: {*/}
+                                {/*width: '100%'*/}
+                            {/*},*/}
+                            {/*description: {*/}
+                                {/*fontWeight: 'bold'*/}
+                            {/*},*/}
+                            {/*predefinedPlacesDescription: {*/}
+                                {/*color: '#1faadb'*/}
+                            {/*}*/}
+                        {/*}}*/}
 
-                        //currentLocation={true} // Will add a 'Current location' button at the top of the predefined places list
-                        //currentLocationLabel="Current location"
-                        nearbyPlacesAPI='GooglePlacesSearch' // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
-                        GoogleReverseGeocodingQuery={{
-                            // available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro
-                        }}
-                        GooglePlacesSearchQuery={{
-                            // available options for GooglePlacesSearch API : https://developers.google.com/places/web-service/search
-                            rankby: 'distance',
-                            types: 'food'
-                        }}
+                        {/*//currentLocation={true} // Will add a 'Current location' button at the top of the predefined places list*/}
+                        {/*//currentLocationLabel="Current location"*/}
+                        {/*nearbyPlacesAPI='GooglePlacesSearch' // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch*/}
+                        {/*GoogleReverseGeocodingQuery={{*/}
+                            {/*// available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro*/}
+                        {/*}}*/}
+                        {/*GooglePlacesSearchQuery={{*/}
+                            {/*// available options for GooglePlacesSearch API : https://developers.google.com/places/web-service/search*/}
+                            {/*rankby: 'distance',*/}
+                            {/*types: 'food'*/}
+                        {/*}}*/}
 
-                        filterReverseGeocodingByTypes={['locality', 'administrative_area_level_3']} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
-                        //predefinedPlaces={[homePlace, workPlace]}
+                        {/*filterReverseGeocodingByTypes={['locality', 'administrative_area_level_3']} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities*/}
+                        {/*//predefinedPlaces={[homePlace, workPlace]}*/}
 
-                        debounce={500} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
-                        // renderRightButton={() => <Text>Custom text after the input</Text>}
-                    />
-                </View>
-                <View style={{flexDirection: 'row'}}>
-                    <GooglePlacesAutocomplete
-                        placeholder='Chặng dừng chân'
-                        minLength={2} // minimum length of text to search
-                        autoFocus={false}
-                        returnKeyType={'search'} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
-                        listViewDisplayed='auto'    // true/false/undefined
-                        fetchDetails={true}
-                        renderDescription={row => row.description} // custom description render
-                        onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
-                            console.log(data, details);
-                        }}
+                        {/*debounce={500} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.*/}
+                        {/*// renderRightButton={() => <Text>Custom text after the input</Text>}*/}
+                    {/*/>*/}
+                {/*</View>*/}
+                {/*<View style={{flexDirection: 'row'}}>*/}
+                    {/*<GooglePlacesAutocomplete*/}
+                        {/*placeholder='Chặng dừng chân'*/}
+                        {/*minLength={2} // minimum length of text to search*/}
+                        {/*autoFocus={false}*/}
+                        {/*returnKeyType={'search'} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype*/}
+                        {/*listViewDisplayed='auto'    // true/false/undefined*/}
+                        {/*fetchDetails={true}*/}
+                        {/*renderDescription={row => row.description} // custom description render*/}
+                        {/*onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true*/}
+                            {/*console.log(data, details);*/}
+                        {/*}}*/}
 
-                        getDefaultValue={() => ''}
+                        {/*getDefaultValue={() => ''}*/}
 
-                        query={{
-                            // available options: https://developers.google.com/places/web-service/autocomplete
-                            key: 'AIzaSyADMVfXyrF1LhxMVnu6AlAa0hPo3tQiyZ4',
-                            language: 'vi', // language of the results
-                            //types: '(cities)' // default: 'geocode'
-                        }}
+                        {/*query={{*/}
+                            {/*// available options: https://developers.google.com/places/web-service/autocomplete*/}
+                            {/*key: 'AIzaSyADMVfXyrF1LhxMVnu6AlAa0hPo3tQiyZ4',*/}
+                            {/*language: 'vi', // language of the results*/}
+                            {/*//types: '(cities)' // default: 'geocode'*/}
+                        {/*}}*/}
 
-                        styles={{
-                            textInputContainer: {
-                                width: '100%'
-                            },
-                            description: {
-                                fontWeight: 'bold'
-                            },
-                            predefinedPlacesDescription: {
-                                color: '#1faadb'
-                            },
-                            separator: {
-                                backgroundColor: '#ff3526'
-                            }
-                        }}
+                        {/*styles={{*/}
+                            {/*textInputContainer: {*/}
+                                {/*width: '100%'*/}
+                            {/*},*/}
+                            {/*description: {*/}
+                                {/*fontWeight: 'bold'*/}
+                            {/*},*/}
+                            {/*predefinedPlacesDescription: {*/}
+                                {/*color: '#1faadb'*/}
+                            {/*},*/}
+                            {/*separator: {*/}
+                                {/*backgroundColor: '#ff3526'*/}
+                            {/*}*/}
+                        {/*}}*/}
 
-                        //currentLocation={true} // Will add a 'Current location' button at the top of the predefined places list
-                        //currentLocationLabel="Current location"
-                        nearbyPlacesAPI='GooglePlacesSearch' // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
-                        GoogleReverseGeocodingQuery={{
-                            // available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro
-                        }}
-                        GooglePlacesSearchQuery={{
-                            // available options for GooglePlacesSearch API : https://developers.google.com/places/web-service/search
-                            rankby: 'distance',
-                            types: 'food'
-                        }}
+                        {/*//currentLocation={true} // Will add a 'Current location' button at the top of the predefined places list*/}
+                        {/*//currentLocationLabel="Current location"*/}
+                        {/*nearbyPlacesAPI='GooglePlacesSearch' // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch*/}
+                        {/*GoogleReverseGeocodingQuery={{*/}
+                            {/*// available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro*/}
+                        {/*}}*/}
+                        {/*GooglePlacesSearchQuery={{*/}
+                            {/*// available options for GooglePlacesSearch API : https://developers.google.com/places/web-service/search*/}
+                            {/*rankby: 'distance',*/}
+                            {/*types: 'food'*/}
+                        {/*}}*/}
 
-                        filterReverseGeocodingByTypes={['locality', 'administrative_area_level_3']} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
-                        //predefinedPlaces={[homePlace, workPlace]}
+                        {/*filterReverseGeocodingByTypes={['locality', 'administrative_area_level_3']} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities*/}
+                        {/*//predefinedPlaces={[homePlace, workPlace]}*/}
 
-                        debounce={500} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
-                        // renderRightButton={() => <Text>Custom text after the input</Text>}
-                    />
-                </View>
+                        {/*debounce={500} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.*/}
+                        {/*// renderRightButton={() => <Text>Custom text after the input</Text>}*/}
+                    {/*/>*/}
+                {/*</View>*/}
                 <MapView //21.031311, 105.820999
                     style={{flex: 1}}
                     initialRegion={{
@@ -199,15 +207,22 @@ export default class App extends React.Component {
                         latitudeDelta: 0.0922,
                         longitudeDelta: 0.0421,
                     }}>
-                    {this.state.tripFrom === null ?  (<Marker
+                    {this.state.tripFrom !== null ?  (<Marker
                         coordinate={{
                             //21.033715, 105.777915
-                            latitude: 21.033715,
-                            longitude: 105.777915
+                            latitude: this.state.tripFrom.lat,
+                            longitude: this.state.tripFrom.lng
                         }}
                         title='điểm đến '
                         description='quất lâm '
                     />) : null}
+                    {this.state.markers.map(marker => (
+                        <Marker
+                            coordinate={marker.latlng}
+                            title={marker.title}
+                            description={marker.description}
+                        />
+                    ))}
 
                 </MapView>
             </View>
